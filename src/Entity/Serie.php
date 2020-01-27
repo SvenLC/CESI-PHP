@@ -46,6 +46,11 @@ class Serie
      */
     private $overview;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $mediaType;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -119,6 +124,18 @@ class Serie
     public function setOverview(?string $overview): self
     {
         $this->overview = $overview;
+
+        return $this;
+    }
+
+    public function getMediaType(): ?string
+    {
+        return $this->mediaType;
+    }
+
+    public function setMediaType(?string $mediaType): self
+    {
+        $this->mediaType = $mediaType;
 
         return $this;
     }
