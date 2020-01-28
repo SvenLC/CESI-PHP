@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Movie;
+use App\Entity\MovieGenre;
+use App\Repository\MovieGenreRepository;
 use App\Form\MovieType;
 use App\Repository\MovieRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,6 +17,23 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class MovieController extends AbstractController
 {
+    /**
+     * @Route("/{name}", name="movie_index_genre", methods={"GET"})
+     * @param MovieGenre|null $genre
+     * @param MovieRepository $movieRepository
+     * @param MovieGenreRepository $genreRepo
+     * @return Response
+     */
+
+    public function indexByGenre(MovieGenreRepository $genreRepo, MovieGenre $genre): Response
+    {
+        return $this->render('movie/index.html.twig', [
+            'movies' => $genre->getMovies(),
+            'genre' => $genre,
+            'genres' => $genreRepo->findAll()
+        ]);
+    }
+
     /**
      * @Route("/", name="movie_index", methods={"GET"})
      */
@@ -83,7 +102,7 @@ class MovieController extends AbstractController
      */
     public function delete(Request $request, Movie $movie): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$movie->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $movie->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($movie);
             $entityManager->flush();

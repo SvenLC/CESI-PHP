@@ -3,41 +3,38 @@
 {% block title %}Movie index{% endblock %}
 
 {% block body %}
-    <h1>Movie index</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Image</th>
-                <th>ReleaseDate</th>
-                <th>Note</th>
-                <th>ImdbID</th>
-                <th>Overview</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
+    <h1>Movie index</h1>   
+        <div class="row">           
         {% for movie in movies %}
-            <tr>
-                <td>{{ movie.id }}</td>
-                <td>{{ movie.title }}</td>
-                <td><image src="{{ movie.image }}"</td>
-                <td>{{ movie.releaseDate ? movie.releaseDate|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ movie.note }}</td>
-                <td>{{ movie.imdbID }}</td>
-                <td>{{ movie.overview }}</td>
-                <td>
-                    <a href="{{ path('movie_show', {'id': movie.id}) }}">show</a>
-                    <a href="{{ path('movie_edit', {'id': movie.id}) }}">edit</a>
-                </td>
-            </tr>
+            <div class="col-sm-2">
+                <div class="card" style="width: 18rem; height: 100%;">
+                    <img class="card-img-top" src="{{ movie.image }}" alt="Card image cap">
+                    <div class="card-body">  
+                    <div style="padding-bottom: 5rem;">      
+                        <h5 class="card-title">{{ movie.title }}</h5>
+                        <p class="card-text">Date de sortie : {{ movie.releaseDate ? movie.releaseDate|date('Y-m-d') : '' }}</p>
+                        <p class="card-text">Note : {{ movie.note }}/10</p>
+                        <p class="card-text">{{ movie.overview }}</p>
+                        {% for genre in movie.genre %}                        
+                        <a href="{{ path('movie_index_genre', {'name':genre.name}) }}" class="btn btn-primary">{{ genre.name }}</a>
+                        {% if not loop.last %},{% endif %}
+                        {% endfor %}
+                        </div>
+                        <div style="position:absolute; bottom:1rem;">
+
+                        <a href="{{ path('movie_show', {'id': movie.id}) }}" class="btn btn-primary">Show</a>
+                        <a href="{{ path('movie_edit', {'id': movie.id}) }}" class="btn btn-primary">SEdit</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
         {% else %}
             <tr>
                 <td colspan="8">no records found</td>
             </tr>
-        {% endfor %}
+        {% endfor %}        
+        </div>
         </tbody>
     </table>
 
