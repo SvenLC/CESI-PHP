@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -50,6 +52,16 @@ class Serie
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $mediaType;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\SerieGenre", inversedBy="series")
+     */
+    private $genre;
+
+    public function __construct()
+    {
+        $this->genre = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -136,6 +148,32 @@ class Serie
     public function setMediaType(?string $mediaType): self
     {
         $this->mediaType = $mediaType;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SerieGenre[]
+     */
+    public function getGenre(): Collection
+    {
+        return $this->genre;
+    }
+
+    public function addGenre(SerieGenre $genre): self
+    {
+        if (!$this->genre->contains($genre)) {
+            $this->genre[] = $genre;
+        }
+
+        return $this;
+    }
+
+    public function removeGenre(SerieGenre $genre): self
+    {
+        if ($this->genre->contains($genre)) {
+            $this->genre->removeElement($genre);
+        }
 
         return $this;
     }

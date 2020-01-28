@@ -4,8 +4,10 @@ namespace App\Command;
 
 use App\Repository\MovieRepository;
 use App\Repository\SerieRepository;
+use App\Repository\MovieGenreRepository;
 use App\Entity\Movie;
 use App\Entity\Serie;
+use App\Entity\MovieGenre;
 
 use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Descriptor\Descriptor;
@@ -32,16 +34,26 @@ class ImportDataCommand extends Command
      */
     private $serieRepo;
     /**
+     * @var MovieGenreRepository
+     */
+    private $movieGenreRepo;
+    /**
      * @var ContainerInterface
      */
     private $container;
 
     const API_URL = "https://api.themoviedb.org/3/trending/all/week?api_key=5cc2a8649806823dc48b871af14a0f06";
+    const API_URL_MOVIE_GENRES = "https://api.themoviedb.org/3/genre/movie/list?language=fr-FR&api_key=5cc2a8649806823dc48b871af14a0f06";
 
-    public function __construct(MovieRepository $movieRepository, SerieRepository $serieRepository, ContainerInterface $container)
-    {
+    public function __construct(
+        MovieRepository $movieRepository,
+        SerieRepository $serieRepository,
+        MovieGenreRepository $movieGenreRepository,
+        ContainerInterface $container
+    ) {
         $this->movieRepo = $movieRepository;
         $this->serieRepo = $serieRepository;
+        $this->movieGenreRepo = $movieGenreRepository;
         $this->container = $container;
 
         parent::__construct();
@@ -68,6 +80,7 @@ class ImportDataCommand extends Command
         $nbSeriesCreated = 0;
         foreach ($responseContent->results as $r) {
             if ($r->media_type === 'movie') {
+                $movie = $this->movieRepo->findOneBy(['imdbID' => $r->id]);
                 //Si on ne trouve pas le film par son identifiant IMDB
                 if (!$this->movieRepo->findOneBy(['imdbID' => $r->id])) {
                     // Création d'un film
@@ -82,11 +95,20 @@ class ImportDataCommand extends Command
                     $movie->setMediaType($r->media_type);
 
 
-                    $em->persist($movie);
+                    
 
                     // Incrémentation du compteur
                     $nbMoviesCreated++;
                 }
+
+                if (count($r->genre_ids) > 0 && count($movie->getGenre()) === 0) {
+
+                    foreach ($r->genre_ids as $genreId) {
+                        $genre = $this->movieGenreRepo->findOneBy(['imdbID' => $genreId]);
+                        $movie->addGenre($genre);
+                    }
+                }
+                $em->persist($movie);
             }
             if ($r->media_type === 'tv') {
                 //Si on ne trouve pas le film par son identifiant IMDB
@@ -109,6 +131,19 @@ class ImportDataCommand extends Command
                     // Incrémentation du compteur
                     $nbSeriesCreated++;
                 }
+            }
+        }
+        if (count($this->movieGenreRepo->findAll()) === 0) {
+
+            $httpClient = HttpClient::create();
+            $responseContent = json_decode($httpClient->request('GET', self::API_URL_MOVIE_GENRES)->getContent());
+
+            foreach ($responseContent->genres as $g) {
+                $genre = new MovieGenre();
+                $genre->setName($g->name);
+                $genre->setImdbID($g->id);
+                $em->persist($genre);
+               
             }
         }
 

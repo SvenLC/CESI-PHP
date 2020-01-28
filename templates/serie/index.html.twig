@@ -23,7 +23,7 @@
             <tr>
                 <td>{{ serie.id }}</td>
                 <td>{{ serie.title }}</td>
-                <td>{{ serie.image }}</td>
+                <td><image src="{{ serie.image }}"/></td>
                 <td>{{ serie.releaseDate ? serie.releaseDate|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ serie.note }}</td>
                 <td>{{ serie.imdbID }}</td>
