@@ -21,7 +21,7 @@
                         {% endfor %}
                         </div>
                         <div style="position:absolute; bottom:1rem;">
-
+                        <button id="fav-button" class="btn btn-primary fav-btn" value="{{movie.id}}">Ajouter favori</button>    
                         <a href="{{ path('movie_show', {'id': movie.id}) }}" class="btn btn-primary">Show</a>
                         <a href="{{ path('movie_edit', {'id': movie.id}) }}" class="btn btn-primary">SEdit</a>
                         </div>

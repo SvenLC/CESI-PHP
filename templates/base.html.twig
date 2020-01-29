@@ -15,9 +15,8 @@
   <body>    
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href={{'/'}}>Accueil</a>
-    <a class="navbar-brand" href={{'movie'}}>Movie</a>
-    {% if app.user is not null %}
-            
+    <a class="navbar-brand" href={{'/movie'}}>Movie</a>
+    {% if app.user is not null %}            
               <a class="navbar-brand">
                 Connecté en tant que {{ app.user.username }}
               </a>

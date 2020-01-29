@@ -27,12 +27,11 @@ class UserController extends AbstractController
      */
     public function addFavoriteMovie(Movie $movie): Response
     {
-        dd($movie);
         /**
          * @var User $user
          */
         $user = $this->getUser();
-        if (!$user->movies->contains($movie)) {
+        if (!$user->getMovies()->contains($movie)) {
             $user->addMovie($movie);
             $message = 'added';
         } else {

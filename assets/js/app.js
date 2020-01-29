@@ -7,7 +7,33 @@
 
 // any CSS you import will output into a single css file (app.css in this case)
 import "../css/app.scss";
-// Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
-// import $ from 'jquery';
+import $ from "jquery";
+const routes = require("../../public/js/fos_js_routes.json");
+import Routing from "../../vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js/router.min.js";
 
-console.log("Hello Webpack Encore! Edit me in assets/js/app.js");
+Routing.setRoutingData(routes);
+
+window.addEventListener("DOMContentLoaded", event => {
+  console.log("Page loaded");
+});
+
+const favBtns = document.getElementsByClassName("fav-btn");
+
+favBtns.forEach(favBtn => {
+  favBtn.addEventListener("click", addFavorite);
+});
+
+
+function addFavorite(event) {
+  const xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+     console.log('Request send')
+    }
+  };
+  const method = "GET"
+  const url = "add/favorite/" + event.target.value
+  xhttp.open(method, url, true);
+  xhttp.send();
+  console.log(event.target.value);
+}

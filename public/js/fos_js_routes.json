@@ -1,1 +1,1 @@
-{"base_url":"","routes":[],"prefix":"","host":"localhost","port":"","scheme":"http","locale":[]}
+{"base_url":"","routes":{"add_favorite_movie":{"tokens":[["variable","\/","[^\/]++","id",true],["text","\/movie\/add\/favorite"]],"defaults":[],"requirements":[],"hosttokens":[],"methods":[],"schemes":[]}},"prefix":"","host":"localhost","port":"","scheme":"http","locale":[]}
