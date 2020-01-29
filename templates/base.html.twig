@@ -11,8 +11,22 @@
       {{ encore_entry_link_tags('app') }}
     {% endblock %}
   </head>
-  <body>
+
+  <body>    
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href={{'/'}}>Accueil</a>
+    <a class="navbar-brand" href={{'movie'}}>Movie</a>
+    {% if app.user is not null %}
+            
+              <a class="navbar-brand">
+                Connecté en tant que {{ app.user.username }}
+              </a>
+            
+          {% endif %}
+    </nav>    
+    
     {% block body %}
+
     {% endblock %}
     {% block javascripts %}
       {{ encore_entry_script_tags('app') }}
