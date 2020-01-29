@@ -4,8 +4,15 @@
 
 {% block body %}
     <h1>Movie index</h1>   
-        <div class="row">           
-        {% for movie in movies %}
+    <div class="navigation">
+    {{ knp_pagination_render(pagination) }}
+</div>
+<div class="count">
+    {{ pagination.getTotalItemCount }}
+</div>
+        <div class="row">       
+            
+        {% for movie in pagination %}
             <div class="col-sm-2">
                 <div class="card" style="width: 18rem; height: 100%;">
                     <img class="card-img-top" src="{{ movie.image }}" alt="Card image cap">

@@ -11,6 +11,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
+
 
 /**
  * @Route("/movie")
@@ -36,12 +38,17 @@ class MovieController extends AbstractController
 
     /**
      * @Route("/", name="movie_index", methods={"GET"})
+     * @param PaginatorInterface $paginator
+     * @param MovieRepository $movieRepository
+     * @param $page
+     * @return Response
      */
-    public function index(MovieRepository $movieRepository): Response
+    public function index(MovieRepository $movieRepository, PaginatorInterface $paginator): Response
     {
-        return $this->render('movie/index.html.twig', [
-            'movies' => $movieRepository->findAll(),
-        ]);
+        $query = $movieRepository->createQueryBuilder('movie')->getQuery();
+        $pagination = $paginator->paginate($query, 1, 5);
+        return $this->render('movie/index.html.twig', ['pagination' => $pagination]);
+        
     }
 
     /**
